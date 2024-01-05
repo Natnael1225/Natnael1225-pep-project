@@ -108,17 +108,17 @@ public class Main {
     HttpClient webClient;
     webClient = HttpClient.newHttpClient();
 
-    // HttpRequest postMessageRequest = HttpRequest.newBuilder()
-    // .uri(URI.create("http://localhost:8080/messages"))
-    // .POST(HttpRequest.BodyPublishers.ofString("{"+
-    //         "\"posted_by\":1, " +
-    //         "\"message_text\": \"hello message\", " +
-    //         "\"time_posted_epoch\": 1669947792}"))
-    // .header("Content-Type", "application/json")
-    // .build();
+    HttpRequest postMessageRequest = HttpRequest.newBuilder()
+    .uri(URI.create("http://localhost:8080/messages"))
+    .POST(HttpRequest.BodyPublishers.ofString("{"+
+            "\"posted_by\":1, " +
+            "\"message_text\": \"hello message\", " +
+            "\"time_posted_epoch\": 1669947792}"))
+    .header("Content-Type", "application/json")
+    .build();
 
-    // HttpResponse response = webClient.send(postMessageRequest, HttpResponse.BodyHandlers.ofString());
-    // int status = response.statusCode();
+     HttpResponse response = webClient.send(postMessageRequest, HttpResponse.BodyHandlers.ofString());
+     int status = response.statusCode();
 
 
 
@@ -130,11 +130,11 @@ public class Main {
     //     int status = response.statusCode();
 
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/accounts/1/messages"))
-                .build();
-        HttpResponse response = webClient.send(request, HttpResponse.BodyHandlers.ofString());
-        int status = response.statusCode();
+        // HttpRequest request = HttpRequest.newBuilder()
+        //         .uri(URI.create("http://localhost:8080/accounts/1/messages"))
+        //         .build();
+        // HttpResponse response = webClient.send(request, HttpResponse.BodyHandlers.ofString());
+        // int status = response.statusCode();
 
         System.out.println("Status: " + status);
         System.out.println("Response body: " + response.body());

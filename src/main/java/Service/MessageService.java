@@ -13,13 +13,17 @@ public class MessageService {
           this.messageDAO = messageDAO;
     }
 
-    public Message postMessage(Message message) throws SQLException {
+    public Message postMessage(Message message) throws Exception {
+        System.out.println("Messege ---------------2 db" + message.toString());
         if (message.getMessage_text() == null || message.getMessage_text().trim().isEmpty()) {
-            throw new SQLException("Message text cannot be blank.");
+            throw new Exception("Message text cannot be blank.");
         }
+        System.out.println("Messege --------------- 3db" + message.toString());
         if (message.getMessage_text().length() > 255) {
-            throw new SQLException("Message text cannot exceed 255 characters.");
+            throw new Exception("Message text cannot exceed 255 characters.");
         }
+
+        System.out.println("Messege ---------------4 db" + message.toString());
         return messageDAO.createMessage(message);
     }
 

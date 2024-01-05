@@ -14,13 +14,16 @@ public class MessageDAO {
 
     public Message createMessage(Message message) throws SQLException {
         String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
+        System.out.println("Messege --------------- db" + message.toString());
         Connection conn = ConnectionUtil.getConnection();
            try{
               PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
               pstmt.setInt(1, message.getPosted_by());
               pstmt.setString(2, message.getMessage_text());
               pstmt.setLong(3, message.getTime_posted_epoch());
+              System.out.println("Messege --------------- db" + message.toString());
               pstmt.executeUpdate();
+              System.out.println("Messege --------------- db" + message.toString());
                 ResultSet generatedKeys = pstmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     message.setMessage_id(generatedKeys.getInt(1));
@@ -28,7 +31,7 @@ public class MessageDAO {
                     throw new SQLException("Creating message failed, no ID obtained.");
                 }
             }catch(SQLException e){
-
+                System.out.println("Messege ---------------" + e.getMessage().toString());
             }
             return message;
         }

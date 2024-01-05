@@ -8,7 +8,7 @@ import Service.AccountService;
 import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -51,7 +51,7 @@ public class SocialMediaController {
          app.patch("/messages/{message_id}", this::updateMessage);
          app.get("/accounts/{account_id}/messages", this::getMessagesByAccountId);
 
-       app.get("/message", this::exampleHandler);
+    //    app.get("/message", this::exampleHandler);
 
         return app;
     }
@@ -60,12 +60,11 @@ public class SocialMediaController {
      * This is an example handler for an example endpoint.
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
-    private void exampleHandler(Context context) {
-        context.json("sample text");
-    }
+    // private void exampleHandler(Context context) {
+    //     context.json("sample text");
+    // }
     public void handleUserRegistration(Context ctx) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        HttpResponse<Account> httpResponse;
         Account account = mapper.readValue(ctx.body(), Account.class);
         try{
              Account addedAccount = accountService.registerAccount(account);
@@ -96,8 +95,12 @@ public class SocialMediaController {
 
     private void createMessage(Context context) {
         try {
-            Message message = context.bodyAsClass(Message.class);
+            ObjectMapper mapper = new ObjectMapper();
+            Message message = mapper.readValue(context.body(), Message.class);
+           // Message message = context.bodyAsClass(Message.class);
+            System.out.println("Messege ---------------" + message.toString());
             Message createdMessage = messageService.postMessage(message);
+            System.out.println("Messege ---------------4" + message.toString());
             context.json(createdMessage);
         } catch (Exception e) {
             context.status(400).result(e.getMessage());
