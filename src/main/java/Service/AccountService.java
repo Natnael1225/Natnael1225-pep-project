@@ -7,13 +7,13 @@ import java.sql.SQLException;
 public class AccountService {
 
     private AccountDAO accountDAO;
-    public AccountService (AccountDAO accountDAO){
-        this.accountDAO = accountDAO;
+    public AccountService (){
+        this.accountDAO = new AccountDAO();
     }
     public Account registerAccount(Account account) throws Exception {
         if (account.getUsername() == null || account.getUsername().isEmpty() ||
             account.getPassword() == null || account.getPassword().length() < 4) {
-            throw new SQLException("Invalid registration details");
+            throw new Exception("Invalid registration details");
         }
          if (accountDAO.findAccountByUsername(account.getUsername()) != null) {
              throw new Exception("Username already exists");

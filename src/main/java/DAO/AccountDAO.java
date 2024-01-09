@@ -48,6 +48,24 @@ public class AccountDAO {
         }
         return null;    
     }
+    
+    public Account findAccountById(int accountId) throws SQLException {
+        String sql = "SELECT * FROM account WHERE account_id = ?";
+        Connection conn = ConnectionUtil.getConnection();
+        try{
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, accountId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return extractAccount(rs);
+            } 
+        }catch(SQLException se){
+
+        }
+        return null;    
+    }
+    
+
 
     private Account extractAccount(ResultSet rs) throws SQLException {
         return new Account(

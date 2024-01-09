@@ -28,9 +28,9 @@ public class Main {
     public static void main(String[] args) throws JsonProcessingException, InterruptedException, IOException {
          AccountDAO accountDAO = new AccountDAO();
          MessageDAO messageDAO = new MessageDAO();
-         AccountService accountService = new AccountService(accountDAO);
-         MessageService messageService = new MessageService(messageDAO);
-         SocialMediaController controller = new SocialMediaController(accountService,  messageService);
+         AccountService accountService = new AccountService();
+         MessageService messageService = new MessageService();
+         SocialMediaController controller = new SocialMediaController();
          //MessageService messageService = new MessageService();
         Account account  = new Account();
         //account.setAccount_id(1);
@@ -63,11 +63,11 @@ public class Main {
 
     HttpClient client = HttpClient.newHttpClient();
 
-    // HttpRequest request = HttpRequest.newBuilder()
-    //         .uri(URI.create("http://localhost:8080/register"))
-    //         .header("Content-Type", "application/json")
-    //         .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-    //         .build();
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:8080/register"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+            .build();
 
         // HttpRequest request = HttpRequest.newBuilder()
         //     .uri(URI.create("http://localhost:8080/login"))

@@ -1,5 +1,6 @@
 package Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Model.Account;
@@ -26,12 +27,10 @@ public class SocialMediaController {
 
      AccountService accountService;
      MessageService messageService;
-    public SocialMediaController(){
 
-    }
-    public SocialMediaController (AccountService accountService, MessageService messageService){
-        this.accountService = accountService;
-        this.messageService = messageService;
+    public SocialMediaController (){
+        this.accountService = new AccountService();
+        this.messageService = new MessageService();
     }
 
     /**
@@ -65,7 +64,9 @@ public class SocialMediaController {
     // }
     public void handleUserRegistration(Context ctx) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
+        System.out.println("COntext ++++++++++ :" + ctx.toString() );
         Account account = mapper.readValue(ctx.body(), Account.class);
+        System.out.println("account -------:" + account.toString() );
         try{
              Account addedAccount = accountService.registerAccount(account);
              if(addedAccount!=null){
@@ -74,10 +75,11 @@ public class SocialMediaController {
             }else{
                 ctx.status(400);
             }
-            } catch(SQLException se){
-
+        } catch(SQLException se){
+            System.out.println("exception +=====" + se.toString());
         }catch(Exception exception){
-            System.out.println(exception.getMessage());
+            ctx.status(400);
+            System.out.println("exception +=====" + exception.toString());
 
         }
        
@@ -89,7 +91,7 @@ public class SocialMediaController {
             Account loggedInAccount = accountService.loginAccount(account.getUsername(), account.getPassword());
             context.json(loggedInAccount);
         } catch (Exception e) {
-            context.status(401).result(e.getMessage());
+            context.status(401);
         }
     }
 
@@ -103,7 +105,7 @@ public class SocialMediaController {
             System.out.println("Messege ---------------4" + message.toString());
             context.json(createdMessage);
         } catch (Exception e) {
-            context.status(400).result(e.getMessage());
+            context.status(400);
         }
     }
 
@@ -112,7 +114,7 @@ public class SocialMediaController {
             List<Message> messages = messageService.getAllMessages();
             context.json(messages);
         } catch (Exception e) {
-            context.status(500).result("Internal Server Error");
+            context.status(500);
         }
     }
 
@@ -123,12 +125,12 @@ public class SocialMediaController {
             if (message != null) {
                 context.json(message);
             } else {
-                context.status(404).result("Message not found");
+                context.status(404);
             }
         } catch (NumberFormatException e) {
-            context.status(400).result("Invalid message ID format");
+            context.status(400);
         } catch (Exception e) {
-            context.status(500).result("Internal Server Error");
+            context.status(200);
         }
     }
 
@@ -137,8 +139,9 @@ public class SocialMediaController {
             int messageId = Integer.parseInt(ctx.pathParam("message_id"));
             Message message = messageService.deleteMessage(messageId);
             ctx.json(message);
+            ctx.status(200);
         } catch (Exception e) {
-            ctx.status(500).result("Internal Server Error");
+            ctx.status(200);
         }
     }
 
@@ -148,19 +151,21 @@ public class SocialMediaController {
             Message updatedMessage = ctx.bodyAsClass(Message.class);
             Message message = messageService.updateMessage(messageId, updatedMessage.getMessage_text());
             ctx.json(message);
-        } catch (IllegalArgumentException e) {
-            ctx.status(400).result(e.getMessage());
-        } catch (Exception e) {
-            ctx.status(500).result("Internal Server Error");
+         } catch (Exception e) {
+            ctx.status(400);
         }
     }
 
     private void getMessagesByAccountId(Context ctx) {
+        List<Message> messages= new ArrayList<>(0);
         try {
             int accountId = Integer.parseInt(ctx.pathParam("account_id"));
-            ctx.json(messageService.getMessagesByAccountId(accountId));
+            messages = messageService.getMessagesByAccountId(accountId);
+            ctx.status(200);
+            ctx.json(messages);
         } catch (Exception e) {
-            ctx.status(500).result("Internal Server Error");
+            ctx.status(200);
+            ctx.json(messages);
         }
     }
 
